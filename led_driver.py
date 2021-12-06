@@ -2,13 +2,14 @@ import _thread as thread
 from machine import Pin
 from neopixel import NeoPixel
 from time import sleep
+from config import led_arrangement as la
 
 
 DELAY = 100
 DELAY_MS = DELAY / 1000
 OCEAN_EYES = (0, 166, 142)
 OFF = (0, 0, 0)
-NUM_LEDS = 8
+NUM_LEDS = 12
 DIO_PIN = 15
 
 
@@ -50,23 +51,41 @@ class LEDDriver():
                 self.np.write()
                 sleep(0.0001)
 
-    def rain(self):
+    def rain(self, wait):
         self.toggle_animation_state()
-        thread.start_new_thread(self.rain_handler, ())
+        thread.start_new_thread(self.rain_handler, ([wait]))
         thread.exit()
 
-    def rain_handler(self):
+    def rain_handler(self, wait):
         self.animate = True
         while self.animate:
-            for led in range(self.num_leds):
-                self.np[led] = OCEAN_EYES
-                self.np.write()
-                sleep(DELAY_MS)
-            for led in range(self.num_leds):
-                self.np[led] = OFF
-                self.np.write()
-                sleep(DELAY_MS)
-        return
+            for led in la["top_row"]:
+                self.np[led - 1] = OCEAN_EYES
+            self.np.write()
+            sleep(wait)
+
+            for led in la["mid_row"]:
+                self.np[led - 1] = OCEAN_EYES
+            self.np.write()
+
+            for led in la["top_row"]:
+                self.np[led - 1] = OFF
+            self.np.write()
+            sleep(wait)
+
+            for led in la["bot_row"]:
+                self.np[led - 1] = OCEAN_EYES
+            self.np.write()
+
+            for led in la["mid_row"]:
+                self.np[led - 1] = OFF
+            self.np.write()
+            sleep(wait)
+
+            for led in la["bot_row"]:
+                self.np[led - 1] = OFF
+            self.np.write()
+            sleep(wait)
 
     def led_off_handler(self):
         for led in range(self.num_leds):
