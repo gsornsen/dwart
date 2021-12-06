@@ -1,3 +1,4 @@
+import urequests as requests
 from MicroWebSrv2.microWebSrv2 import MicroWebSrv2
 from time import sleep
 
@@ -15,6 +16,7 @@ class WebServer:
         self.run_server()
 
     def run_server(self):
+        requests.get("http://localhost/rainbow")
         while self.server.IsRunning:
             sleep(0.001)
 
