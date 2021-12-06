@@ -19,7 +19,8 @@ def rain(microWebSrv2, request):
 @WebRoute(GET, "/rainbow")
 def rainbow(microWebSrv2, request):
     request.Response.ReturnOk("Making it rainbow!\n")
-    driver.rainbow()
+    wait = request.QueryParams.get("wait", 0.001)
+    driver.rainbow(float(wait))
 
 @WebRoute(GET, "/pause")
 def pausing(microWebSrv2, request):

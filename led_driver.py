@@ -36,12 +36,12 @@ class LEDDriver():
         position -= 170
         return (position * 3, 0, 255 - position * 3)
 
-    def rainbow(self):
+    def rainbow(self, wait):
         self.toggle_animation_state()
-        thread.start_new_thread(self.rainbow_handler, ())
+        thread.start_new_thread(self.rainbow_handler, ([wait]))
         thread.exit()
 
-    def rainbow_handler(self):
+    def rainbow_handler(self, wait):
         self.animate = True
         while self.animate:
             for j in range(255):
@@ -49,7 +49,7 @@ class LEDDriver():
                     rc_index = (i * 256 // self.num_leds) + j
                     self.np[i] = self.wheel(rc_index & 255)
                 self.np.write()
-                sleep(0.0001)
+                sleep(wait)
 
     def rain(self, wait):
         self.toggle_animation_state()
