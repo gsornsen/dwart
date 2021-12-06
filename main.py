@@ -13,7 +13,8 @@ def test(microWebSrv2, request):
 @WebRoute(GET, "/rain")
 def rain(microWebSrv2, request):
     request.Response.ReturnOk("Making it rain!\n")
-    driver.rain()
+    wait = request.QueryParams.get("wait", 0.25)
+    driver.rain(float(wait))
 
 @WebRoute(GET, "/rainbow")
 def rainbow(microWebSrv2, request):
